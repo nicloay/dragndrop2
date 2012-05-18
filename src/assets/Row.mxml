@@ -2,7 +2,7 @@
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
                    xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:core="mx.core.*"
 
-                   backgroundColor="0xf0f8ff"
+                   backgroundColor="#ffab3b"
 
                    height="40" width="100%"
                    borderVisible="false" creationComplete="init();">
@@ -35,14 +35,15 @@
         }
 
         private function dragOverHandler(event:DragEvent):void {
-
+//            trace(event.currentTarget);
         }
 
         private function dragDropHandler(event:DragEvent):void {
-            var src=event.dragInitiator;
+            var src:Box=event.dragInitiator as Box;
             src.x = shadow.x;
             src.y = shadow.y;
             src.width=shadow.width;
+            src.addGiveUpAndShowSupport(this);
             event.currentTarget.addElement(src);
             removeShadow();
             dispatchEvent(new Event('dropComplete'));
