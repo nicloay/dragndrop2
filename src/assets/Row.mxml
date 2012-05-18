@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:core="mx.core.*"
+
+                   backgroundColor="0xf0f8ff"
+
+                   height="40" width="100%"
+                   borderVisible="false" creationComplete="init();">
+    <fx:Metadata>
+        [Event(name="dropComplete",type="flash.events.Event")]
+    </fx:Metadata>
+
+    <fx:Script><![CDATA[
+        import mx.collections.ArrayList;
+        import mx.core.IUIComponent;
+        import mx.events.DragEvent;
+        import mx.managers.DragManager;
+
+        private var shadow;
+        public var GAP:int=10;
+
+        [Bindable]
+        public var boxList:ArrayList = new ArrayList();
+
+        private function init():void {
+            this.addEventListener(DragEvent.DRAG_ENTER, dragEnterHandler);
+            this.addEventListener(DragEvent.DRAG_DROP, dragDropHandler);
+            this.addEventListener(DragEvent.DRAG_OVER, dragOverHandler);
+            this.addEventListener(DragEvent.DRAG_EXIT, dragExitHandler);
+
+        }
+
+        private function dragExitHandler(event:DragEvent):void {
+            removeShadow();
+        }
+
+        private function dragOverHandler(event:DragEvent):void {
+
+        }
+
+        private function dragDropHandler(event:DragEvent):void {
+            var src=event.dragInitiator;
+            src.x = shadow.x;
+            src.y = shadow.y;
+            src.width=shadow.width;
+            event.currentTarget.addElement(src);
+            removeShadow();
+            dispatchEvent(new Event('dropComplete'));
+        }
+
+        private function dragEnterHandler(event:DragEvent):void {
+            var dragSrc = event.dragInitiator;
+
+            //create a proxy by creating a new "copy" of the drag src
+            var className:String = getQualifiedClassName(dragSrc);
+            var shadowClass:Class = getDefinitionByName(className) as Class;
+            shadow = new shadowClass();
+            shadow.width = this.width - 20;
+            shadow.alpha = 0.1;
+            shadow.x=GAP;
+            shadow.y = (this.height-shadow.height)/2;
+            this.addElement(shadow);
+            DragManager.acceptDragDrop(event.currentTarget as IUIComponent);
+        }
+
+
+        private function removeShadow():void {
+            if (shadow != null) {
+                this.removeElement(shadow);
+                shadow = null;
+            }
+        }
+        ]]></fx:Script>
+
+</s:BorderContainer>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    cornerRadius="4"
+    backgroundColor="red"
+    alpha="1"
+    height="30" width="100" creationComplete="init();">
+
+             <fx:Script><![CDATA[
+                 import mx.core.IUIComponent;
+                 import mx.managers.DragManager;
+
+                 public var currentBoxState:int=STATE_PASSIVE;
+                 public const STATE_PASSIVE:int=1;
+                 public const STATE_ACTIVE:int=2;
+                 public const STATE_PROXY:int = 3;
+
+                 private function init():void {
+                    this.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+
+                 }
+
+
+                 private function mouseDownHandler(event:MouseEvent):void {
+                     if (currentBoxState!=STATE_PROXY) {
+                        var dragProxy=new Box();
+                         dragProxy.alpha=0.2;
+                        dragProxy.currentBoxState=STATE_PROXY;
+                        DragManager.doDrag(event.currentTarget as IUIComponent,null,event,dragProxy);
+                     }
+                 }
+                 ]]></fx:Script>
+
+
+</s:BorderContainer>

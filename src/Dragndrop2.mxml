@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:assets="assets.*" applicationComplete="init();">
+    <fx:Script><![CDATA[
+        import assets.Box;
+        import assets.Row;
+
+        import mx.collections.ArrayList;
+        import mx.controls.Alert;
+        import mx.core.IUIComponent;
+        import mx.events.DragEvent;
+        import mx.managers.DragManager;
+
+        import spark.components.List;
+        private const GAP:int=10;
+        private var dragProxy:Box;
+        private var moduleList:ArrayList=new ArrayList();
+        private var rowList:ArrayList=new ArrayList();
+        private var tmpBox:Box;
+        private var oldActiveBoxWidth:int;
+        private var oldActiveBoxX:int;
+        private var activeChangedBox:Box;
+        
+        private function mouseDownHandler(event:MouseEvent):void {
+//            dragProxy=new Box();
+//            DragManager.doDrag(event.currentTarget as IUIComponent,null,event,dragProxy);
+        }
+
+        private function dragEnterHandler(event:DragEvent):void {
+                        
+            DragManager.acceptDragDrop(event.currentTarget as IUIComponent);
+        }
+
+        private function dragDropHandler(event:DragEvent):void {
+//            var srcBox:Box=event.dragInitiator as Box;
+//            srcBox.width=tmpBox.width;
+//            srcBox.x = tmpBox.x;
+//            srcBox.y = tmpBox.y;
+//            srcBox.addEventListener("dragOver",dragOverHandler);
+//            srcBox.addEventListener("dragEnter",boxDragEnterHandler);
+//            srcBox.addEventListener("dragExit",boxDragExitHandler);
+//            event.currentTarget.addElement(srcBox);
+//            moduleList.addItem(srcBox);
+//
+//            event.currentTarget.removeElement(tmpBox);
+//            tmpBox=null;
+//            var newBox:Box=new Box();
+//
+//            newBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+//            srcList.addElement(newBox);
+        }
+
+//        private function boxDragExitHandler(event:DragEvent):void {
+////            activeChangedBox.width= oldActiveBoxWidth;
+////            activeChangedBox.x=oldActiveBoxX;
+////            layoutManager.removeElement(tmpBox);
+////            tmpBox=null;
+//        }
+
+//        private function boxDragEnterHandler(event:DragEvent):void {
+//            activeChangedBox=event.currentTarget as Box;
+//            oldActiveBoxWidth=Box(activeChangedBox).width;
+//
+//            oldActiveBoxX = Box(activeChangedBox).x;
+//            var mouseX:int = Box(activeChangedBox).mouseX;
+//
+//            var newWidth:int =(oldActiveBoxWidth-GAP)/2;
+//            activeChangedBox.width=newWidth;
+//            createTmpBox();
+//            tmpBox.width=newWidth;
+//            if (mouseX<=(oldActiveBoxWidth/2)){
+//                tmpBox.x=activeChangedBox.x;
+//                activeChangedBox.x = activeChangedBox.x + newWidth+GAP;
+//            } else {
+//                tmpBox.x = activeChangedBox.x + newWidth+GAP;
+//            }
+//
+//        }
+
+        private function boxFromLayoutMouseOverHandler(event:DragEvent):void {
+
+        }
+
+
+//        private function createTmpBox():Box{
+////            createTmpBoxIfNotExists();
+////            tmpBox.x = 10;
+////            tmpBox.y = 10;
+////            tmpBox.alpha=0.3;
+////            tmpBox.width = layoutManager.width-20;
+////            layoutManager.addElement(tmpBox);
+////            tmpBox.addEventListener("dragExit",boxDragExitHandler);
+////            return tmpBox;
+//        }
+
+
+        private function dragOverHandler(event:DragEvent):void {
+//            if (event.currentTarget){
+//                traceText.text=event.currentTarget.toString();
+//            }
+//            if (moduleList.length==0){
+//                layoutManager.addElement(createTmpBox());
+//            }
+
+        }
+
+        private function createTmpBoxIfNotExists():void{
+//            if (tmpBox==null){
+//                tmpBox=new Box();
+//            }
+        }
+
+        private function dragExitHandler(event:DragEvent):void {
+//            if (tmpBox!=null){
+//                layoutManager.removeElement(tmpBox);
+//                tmpBox=null;
+//            }
+        }
+
+
+
+        private function lmDragOverHandler(event:DragEvent):void {
+            
+        }
+
+        private function init():void {
+            srcList.addElement(new Box);
+            var row:Row = new Row();
+            row.addEventListener('dropComplete',rowDropCompleteHandler);
+
+            layoutManager.addElement(row);
+        }
+
+        private function rowDropCompleteHandler(event):void {
+            srcList.addElement(new Box);
+        }
+
+
+        ]]></fx:Script>
+
+
+
+
+
+
+    <s:Panel id="srcList" title="list" height="300" width="120">
+        <s:layout>
+            <s:VerticalLayout horizontalAlign="center" paddingTop="{GAP}" paddingBottom="{GAP}" gap="{GAP}"/>
+        </s:layout>
+    </s:Panel>
+
+    <s:Panel id="layoutManager" title="layout manager" width="400" height="300" x="130">
+            <!--dragEnter="dragEnterHandler(event)"-->
+            <!--dragDrop="dragDropHandler(event)"-->
+            <!--dragOver="lmDragOverHandler(event)"-->
+            <!--dragExit="dragExitHandler(event)">-->
+
+    </s:Panel>
+    <s:Label id="traceText" text="text" width="400" y="310"/>
+</s:Application>
