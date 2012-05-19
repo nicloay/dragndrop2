@@ -18,7 +18,7 @@ import mx.events.MenuEvent;
 import mx.managers.DragManager;
 
 public class DraggableWithProxyBehaviour extends AbstractBehaviour{
-
+    public var dragProxy:*;
     public function DraggableWithProxyBehaviour(target:UIComponent) {
         super(target);
         init();
@@ -30,7 +30,7 @@ public class DraggableWithProxyBehaviour extends AbstractBehaviour{
 
 
     private function mouseDownHandler(event:MouseEvent):void {
-        var dragProxy=new targetClass();
+        dragProxy=new targetClass();
         dragProxy.width=target.width;
         dragProxy.height=target.height;
 

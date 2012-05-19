@@ -11,13 +11,19 @@
     </fx:Metadata>
 
     <fx:Script><![CDATA[
+        import assets.Box;
+
+        import com.nicloay.behaviours.Event.GiveUpDropComplete;
+
         import mx.collections.ArrayList;
         import mx.core.IUIComponent;
+        import mx.core.IVisualElement;
         import mx.events.DragEvent;
         import mx.managers.DragManager;
 
         private var shadow;
-        public var GAP:int=10;
+        public var GAP:int = 10;
+        private var dropAccept:Boolean = true;
 
         [Bindable]
         public var boxList:ArrayList = new ArrayList();
@@ -25,7 +31,7 @@
         private function init():void {
             this.addEventListener(DragEvent.DRAG_ENTER, dragEnterHandler);
             this.addEventListener(DragEvent.DRAG_DROP, dragDropHandler);
-            this.addEventListener(DragEvent.DRAG_OVER, dragOverHandler);
+
             this.addEventListener(DragEvent.DRAG_EXIT, dragExitHandler);
 
         }
@@ -34,34 +40,47 @@
             removeShadow();
         }
 
-        private function dragOverHandler(event:DragEvent):void {
-//            trace(event.currentTarget);
-        }
 
         private function dragDropHandler(event:DragEvent):void {
-            var src:Box=event.dragInitiator as Box;
+            var src:Box = event.dragInitiator as Box;
             src.x = shadow.x;
             src.y = shadow.y;
-            src.width=shadow.width;
+            src.width = shadow.width;
             src.addGiveUpAndShowSupport(this);
+            src.addEventListener(GiveUpDropComplete.ON_GIVE_UP_DROP_COMPLETE, giveUpDropCompleteHandler);
             event.currentTarget.addElement(src);
             removeShadow();
             dispatchEvent(new Event('dropComplete'));
+            this.removeEventListener(DragEvent.DRAG_DROP, dragDropHandler);
+            this.removeEventListener(DragEvent.DRAG_ENTER, dragEnterHandler);
+            dropAccept = false;
+
+        }
+
+        private function giveUpDropCompleteHandler(event:GiveUpDropComplete):void {
+            var dragInitiator=event.dragInitiator as Box;
+            dragInitiator.addGiveUpAndShowSupport(this);
+            dispatchEvent(new Event('dropComplete'));
+            dragInitiator.addEventListener(GiveUpDropComplete.ON_GIVE_UP_DROP_COMPLETE, giveUpDropCompleteHandler);
+            this.addElement(dragInitiator);
+
         }
 
         private function dragEnterHandler(event:DragEvent):void {
-            var dragSrc = event.dragInitiator;
+            if (dropAccept) {
+                var dragSrc = event.dragInitiator;
 
-            //create a proxy by creating a new "copy" of the drag src
-            var className:String = getQualifiedClassName(dragSrc);
-            var shadowClass:Class = getDefinitionByName(className) as Class;
-            shadow = new shadowClass();
-            shadow.width = this.width - 20;
-            shadow.alpha = 0.1;
-            shadow.x=GAP;
-            shadow.y = (this.height-shadow.height)/2;
-            this.addElement(shadow);
-            DragManager.acceptDragDrop(event.currentTarget as IUIComponent);
+                //create a proxy by creating a new "copy" of the drag src
+                var className:String = getQualifiedClassName(dragSrc);
+                var shadowClass:Class = getDefinitionByName(className) as Class;
+                shadow = new shadowClass();
+                shadow.width = this.width - 20;
+                shadow.alpha = 0.1;
+                shadow.x = GAP;
+                shadow.y = (this.height - shadow.height) / 2;
+                this.addElement(shadow);
+                DragManager.acceptDragDrop(event.currentTarget as IUIComponent);
+            }
         }
 
 
